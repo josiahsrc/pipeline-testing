@@ -51,7 +51,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }} 
         with:
           prompt: |
-            Keep it short and high level on what changed. Use a single list of bullet points. Use emojis!
+            Keep it short and high level on what changed. Use a single list of bullet points. Use emojis! No header, just bullet points.
           from: ${{ steps.commits.outputs.from }}
           to: ${{ steps.commits.outputs.to }}
       - name: Append to step summary
