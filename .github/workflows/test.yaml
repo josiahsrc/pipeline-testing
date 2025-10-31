@@ -50,6 +50,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }} 
         with:
+          prompt: |
+            Keep it short and high level on what changed. Use a single list of bullet points. Use emojis!
           from: ${{ steps.commits.outputs.from }}
           to: ${{ steps.commits.outputs.to }}
       - name: Append to step summary
