@@ -1,0 +1,58 @@
+name: Release Notes
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      from:
+        description: Oldest commit (inclusive) to summarize
+        required: true
+      to:
+        description: Most recent commit (defaults to the dispatch SHA)
+        required: false
+
+jobs:
+  release-notes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      models: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Determine commit range
+        id: commits
+        env:
+          INPUT_FROM: ${{ github.event.inputs.from }}
+          INPUT_TO: ${{ github.event.inputs.to }}
+          DEFAULT_TO: ${{ github.sha }}
+        run: |
+          if [ -n "$INPUT_FROM" ]; then
+            echo "from=$INPUT_FROM" >> "$GITHUB_OUTPUT"
+            if [ -n "$INPUT_TO" ]; then
+              echo "to=$INPUT_TO" >> "$GITHUB_OUTPUT"
+            else
+              echo "to=$DEFAULT_TO" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            if git rev-parse "$DEFAULT_TO~2" >/dev/null 2>&1; then
+              TWO_BEHIND=$(git rev-parse "$DEFAULT_TO~2")
+            else
+              TWO_BEHIND=$(git rev-list --max-parents=0 HEAD | tail -n 1)
+            fi
+            echo "from=$TWO_BEHIND" >> "$GITHUB_OUTPUT"
+            echo "to=$DEFAULT_TO" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Generate release notes
+        id: release
+        uses: josiahsrc/ai-release-notes-builder@v1
+        with:
+          from: ${{ steps.commits.outputs.from }}
+          to: ${{ steps.commits.outputs.to }}
+      - name: Append to step summary
+        run: |
+          cat <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          ## Release Notes
+          ${{ steps.release.outputs.release-notes }}
+          EOF
