@@ -46,7 +46,7 @@ jobs:
           fi
       - name: Generate release notes
         id: release
-        uses: josiahsrc/ai-release-notes-builder@v1
+        uses: josiahsrc/ai-release-notes-builder@v2
         env:
           GITHUB_TOKEN: ${{ github.token }} 
         with:
@@ -54,6 +54,8 @@ jobs:
             Keep it short and high level on what changed. Use a single list of bullet points. Use emojis! No header, just bullet points.
           from: ${{ steps.commits.outputs.from }}
           to: ${{ steps.commits.outputs.to }}
+          paths: |
+            path/a.md
       - name: Append to step summary
         run: |
           cat <<'EOF' >> "$GITHUB_STEP_SUMMARY"
