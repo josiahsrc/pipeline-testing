@@ -44,19 +44,30 @@ jobs:
             echo "from=$TWO_BEHIND" >> "$GITHUB_OUTPUT"
             echo "to=$DEFAULT_TO" >> "$GITHUB_OUTPUT"
           fi
-      - name: Generate release notes
-        id: release
-        uses: josiahsrc/ai-release-notes-builder@v2
+      # - name: Generate release notes
+      #   id: release
+      #   uses: josiahsrc/ai-release-notes-builder@v2
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }} 
+      #   with:
+      #     prompt: |
+      #       Keep it short and high level on what changed. Use a single list of bullet points. Use emojis! No header, just bullet points.
+      #     from: ${{ steps.commits.outputs.from }}
+      #     to: ${{ steps.commits.outputs.to }}
+      #     paths: |
+      #       path/a.md
+      #       path/b.md
+      - name: Post on x
+        uses: josiahsrc/x-auto-poster@v1
         env:
-          GITHUB_TOKEN: ${{ github.token }} 
+          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
         with:
-          prompt: |
-            Keep it short and high level on what changed. Use a single list of bullet points. Use emojis! No header, just bullet points.
           from: ${{ steps.commits.outputs.from }}
           to: ${{ steps.commits.outputs.to }}
-          paths: |
-            path/a.md
-            path/b.md
+          tone: Pumped up and excited
+          hashtags: release,updates,voquill
+          prompt: |
+            Write a concise and engaging post summarizing the changes made between the specified commits. Use a friendly and excited tone, and include relevant hashtags.
       - name: Append to step summary
         run: |
           cat <<'EOF' >> "$GITHUB_STEP_SUMMARY"
