@@ -57,21 +57,25 @@ jobs:
       #     paths: |
       #       path/a.md
       #       path/b.md
-      - name: Post on x
-        uses: josiahsrc/x-auto-poster@v4
+      - name: summarize commits
+        id: release
+        uses: josiahsrc/ai-commit-summarizer@v2
         env:
-          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
           GITHUB_TOKEN: ${{ github.token }} 
         with:
+          prompt: |
+            Come up with a viral prompt based on these changes
           from: ${{ steps.commits.outputs.from }}
           to: ${{ steps.commits.outputs.to }}
-          tone: Pumped up and excited
-          hashtags: release,updates,voquill
-          prompt: |
-            Write a concise and engaging post summarizing the changes made between the specified commits. Use a friendly and excited tone, and include relevant hashtags.
-      - name: Append to step summary
-        run: |
-          cat <<'EOF' >> "$GITHUB_STEP_SUMMARY"
-          ## Release Notes
-          ${{ steps.release.outputs.release-notes }}
-          EOF
+      # - name: Post on x
+      #   uses: josiahsrc/ai-comm
+      #   env:
+      #     X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+      #     GITHUB_TOKEN: ${{ github.token }} 
+      #   with:
+      #     from: ${{ steps.commits.outputs.from }}
+      #     to: ${{ steps.commits.outputs.to }}
+      #     tone: Pumped up and excited
+      #     hashtags: release,updates,voquill
+      #     prompt: |
+      #       Write a concise and engaging post summarizing the changes made between the specified commits. Use a friendly and excited tone, and include relevant hashtags.
