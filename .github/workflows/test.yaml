@@ -71,15 +71,13 @@ jobs:
         run: |
           echo "Summary:"
           echo "${{ steps.release.outputs.summary }}"
-      # - name: Post on x
-      #   uses: josiahsrc/ai-comm
-      #   env:
-      #     X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
-      #     GITHUB_TOKEN: ${{ github.token }} 
-      #   with:
-      #     from: ${{ steps.commits.outputs.from }}
-      #     to: ${{ steps.commits.outputs.to }}
-      #     tone: Pumped up and excited
-      #     hashtags: release,updates,voquill
-      #     prompt: |
-      #       Write a concise and engaging post summarizing the changes made between the specified commits. Use a friendly and excited tone, and include relevant hashtags.
+      - name: Post summary to X
+        uses: captradeoff/x-post-action@v1
+        with:
+          appKey: ${{ secrets.X_APP_KEY }}
+          appSecret: ${{ secrets.X_APP_SECRET }}
+          accessToken: ${{ secrets.X_ACCESS_TOKEN }}
+          accessSecret: ${{ secrets.X_ACCESS_SECRET }}
+          message: |
+            Automated update:
+            ${{ steps.release.outputs.summary }}
