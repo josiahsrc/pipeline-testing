@@ -61,6 +61,7 @@ jobs:
         uses: josiahsrc/x-auto-poster@v4
         env:
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }} 
         with:
           from: ${{ steps.commits.outputs.from }}
           to: ${{ steps.commits.outputs.to }}
