@@ -58,7 +58,7 @@ jobs:
       #       path/a.md
       #       path/b.md
       - name: Post on x
-        uses: josiahsrc/x-auto-poster@v3
+        uses: josiahsrc/x-auto-poster@v4
         env:
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
         with:
