@@ -67,6 +67,10 @@ jobs:
             Come up with a viral prompt based on these changes
           from: ${{ steps.commits.outputs.from }}
           to: ${{ steps.commits.outputs.to }}
+      - name: Output summary
+        run: |
+          echo "Summary:"
+          echo "${{ steps.release.outputs.summary }}"
       # - name: Post on x
       #   uses: josiahsrc/ai-comm
       #   env:
